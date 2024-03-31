@@ -7,41 +7,31 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.bimblystudios.searchionary.ui.theme.SearchionaryTheme
+import com.bimblystudios.searchionary.data.remote.DictionaryEndpointFactory
+import com.bimblystudios.searchionary.presentation.search.SearchScreen
+import com.bimblystudios.searchionary.presentation.search.SearchViewModel
+import com.bimblystudios.searchionary.presentation.ui.theme.SearchionaryTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // TODO: Add Dependency Injection
+        val retrofitService = DictionaryEndpointFactory.retrofitService()
+
         setContent {
             SearchionaryTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    SearchScreen(
+                        viewModel = SearchViewModel(
+                            searchWordUseCase = retrofitService
+                        ),
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SearchionaryTheme {
-        Greeting("Android")
     }
 }
