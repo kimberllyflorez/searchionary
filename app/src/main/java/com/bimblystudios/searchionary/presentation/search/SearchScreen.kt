@@ -162,6 +162,7 @@ fun WordListItem(
 
     val iconTint =
         if (word.favorite) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.secondary
+    val audioUrl = word.phonetics.firstOrNull { it.audio.isNotBlank() }?.audio ?: ""
 
     Card(
         modifier = modifier
@@ -198,7 +199,7 @@ fun WordListItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 AudioPlayer(
-                    audioUrl = word.phonetics[0].audio
+                    audioUrl = audioUrl
                 )
                 Text(
                     text = word.phonetic,
@@ -229,8 +230,10 @@ fun WordMeaningItem(
         }
         if (meaning.definitions[0].example != null) {
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Example: ")
-            Text(text = meaning.definitions[0].example!!)
+            Row {
+                Text(text = "Example: ")
+                Text(text = meaning.definitions[0].example!!)
+            }
         }
 
     }

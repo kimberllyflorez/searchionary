@@ -1,17 +1,16 @@
 package com.bimblystudios.searchionary.presentation.ui.components
 
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.bimblystudios.searchionary.presentation.ui.theme.SearchionaryTheme
 import kotlinx.coroutines.CoroutineScope
@@ -21,16 +20,24 @@ import java.io.IOException
 
 @Composable
 fun AudioPlayer(audioUrl: String) {
+
+    val context = LocalContext.current
+
+
     val mediaPlayer = remember { MediaPlayer() }
     val isPlaying = remember { mutableStateOf(false) }
 
     Column {
         IconButton(
             onClick = {
-                if (!isPlaying.value) {
-                    playAudio(mediaPlayer, audioUrl)
+                if (audioUrl.isNotEmpty()) {
+                    if (!isPlaying.value) {
+                        playAudio(mediaPlayer, audioUrl)
+                    } else {
+                        stopAudio(mediaPlayer)
+                    }
                 } else {
-                    stopAudio(mediaPlayer)
+                    Toast.makeText(context, "No audio available", Toast.LENGTH_SHORT).show()
                 }
             }
         ) {
