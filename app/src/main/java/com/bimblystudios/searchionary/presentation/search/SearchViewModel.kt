@@ -1,21 +1,15 @@
 package com.bimblystudios.searchionary.presentation.search
 
-import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bimblystudios.searchionary.data.model.Word
-import com.bimblystudios.searchionary.data.model.sample.WordSample
 import com.bimblystudios.searchionary.data.remote.DictionaryEndpoints
 import com.bimblystudios.searchionary.presentation.common.UiStatus
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class SearchViewModel(
     private val searchWordUseCase: DictionaryEndpoints
@@ -48,12 +42,12 @@ class SearchViewModel(
                 it.copy(status = UiStatus.LOADING)
             }
             viewModelScope.launch {
-                // TODO: Commented for test purposes
-//                val word = searchWordUseCase.searchWord(
-//                    _state.value.searchQuery
-//                )
-                delay(500)
-                val word = WordSample().wordSuccess
+                val word = searchWordUseCase.searchWord(
+                    _state.value.searchQuery
+                )
+//                 Uncomment to test response
+                /*delay(500)
+                val word = WordSample().wordSuccess*/
                 _state.update {
                     it.copy(
                         searchResults = word,
