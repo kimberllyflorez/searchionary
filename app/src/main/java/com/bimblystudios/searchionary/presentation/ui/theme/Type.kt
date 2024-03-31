@@ -1,4 +1,4 @@
-package com.bimblystudios.searchionary.ui.theme
+package com.bimblystudios.searchionary.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
