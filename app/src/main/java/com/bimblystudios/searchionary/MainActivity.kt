@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.bimblystudios.searchionary.data.remote.DictionaryEndpointFactory
+import com.bimblystudios.searchionary.data.repositories.DictionaryRepository
+import com.bimblystudios.searchionary.domain.usecases.SearchWordUseCase
 import com.bimblystudios.searchionary.presentation.search.SearchScreen
 import com.bimblystudios.searchionary.presentation.search.SearchViewModel
 import com.bimblystudios.searchionary.presentation.ui.theme.SearchionaryTheme
@@ -19,14 +21,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         // TODO: Add Dependency Injection
-        val retrofitService = DictionaryEndpointFactory.retrofitService()
+        val searchWordRepository = DictionaryRepository(
+            dictionaryEndpoint = DictionaryEndpointFactory
+        )
+        val searchWordUseCase = SearchWordUseCase(searchWordRepository)
 
         setContent {
             SearchionaryTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     SearchScreen(
                         viewModel = SearchViewModel(
-                            searchWordUseCase = retrofitService
+                            searchWordUseCase = searchWordUseCase
                         ),
                         modifier = Modifier.padding(innerPadding)
                     )

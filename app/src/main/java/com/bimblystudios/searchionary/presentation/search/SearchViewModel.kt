@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bimblystudios.searchionary.data.model.Word
 import com.bimblystudios.searchionary.data.remote.DictionaryEndpoints
+import com.bimblystudios.searchionary.domain.usecases.SearchWordUseCase
 import com.bimblystudios.searchionary.presentation.common.UiStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val searchWordUseCase: DictionaryEndpoints
+    private val searchWordUseCase: SearchWordUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(SearchState())
     val state: StateFlow<SearchState> = _state.asStateFlow()
@@ -42,17 +43,23 @@ class SearchViewModel(
                 it.copy(status = UiStatus.LOADING)
             }
             viewModelScope.launch {
-                val word = searchWordUseCase.searchWord(
+                val word = searchWordUseCase.invoke(
                     _state.value.searchQuery
                 )
 //                 Uncomment to test response
                 /*delay(500)
                 val word = WordSample().wordSuccess*/
-                _state.update {
-                    it.copy(
-                        searchResults = word,
-                        status = UiStatus.SUCCESS
-                    )
+                if(word != null) {
+                    _state.update {
+                        it.copy(
+                            searchResults = word,
+                            status = UiStatus.SUCCESS
+                        )
+                    }
+                } else {
+                    _state.update {
+                        it.copy(status = UiStatus.ERROR)
+                    }
                 }
             }
 
